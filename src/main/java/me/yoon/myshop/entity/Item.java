@@ -3,6 +3,8 @@ package me.yoon.myshop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -31,5 +33,8 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatusEnum itemSellStatus;
+
+    private LocalDateTime registerTime;
+    private LocalDateTime updateTime;
 
 }
