@@ -75,4 +75,35 @@ class ItemApiControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(5)));
     }
+
+    @Test
+    @DisplayName("상품id 조회")
+    public void findItem()throws Exception{
+        //given
+        final String url = "/api/item/{id}";
+
+        final String name = "item 1";
+        final String detail = "detail 1";
+        final int price = 1000;
+        final int stockNumber = 1;
+        final ItemSellStatusEnum sellStatus = ItemSellStatusEnum.SELL;
+
+        Item item = Item.builder()
+                        .itemName(name)
+                        .itemDetail(detail)
+                        .stockNumber(stockNumber)
+                        .price(price)
+                        .itemSellStatus(sellStatus)
+                        .build();
+
+        Item savedItem = itemRepository.save(item);
+        //when
+        ResultActions result = mockMvc.perform(get(url,savedItem.getId())
+                .accept(MediaType.APPLICATION_JSON));
+        //then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.itemName").value(name))
+                .andExpect(jsonPath("$.itemDetail").value(detail));
+    }
+
 }

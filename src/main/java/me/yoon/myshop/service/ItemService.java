@@ -18,4 +18,8 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
+    public Item findById(Long id){
+        return itemRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 아이템이 없습니다."));
+    }
+
 }
