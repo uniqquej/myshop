@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ItemService {
 
@@ -63,6 +64,18 @@ public class ItemService {
         ItemFormDto itemFormDto = ItemFormDto.of(item);
         itemFormDto.setItemImgDtos(itemImgDtoList);
         return itemFormDto;
+    }
+
+    public Long updateItem(ItemFormDto itemFormDto,List<MultipartFile> itemImgFileList)throws Exception{
+        Item item = itemRepository.findById(itemFormDto.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        item.updateItem(itemFormDto);
+
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
+        for(int i=0; i<itemImgFileList.size();i++){
+            itemImgService.updateItemImg(itemImgIds.get(i),itemImgFileList.get(i));
+        }
+        return item.getId();
     }
 
 }

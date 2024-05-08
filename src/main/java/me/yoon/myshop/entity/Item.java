@@ -2,6 +2,7 @@ package me.yoon.myshop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.yoon.myshop.dto.ItemFormDto;
 
 import java.time.LocalDateTime;
 
@@ -34,4 +35,11 @@ public class Item extends Timestamped{
     @Enumerated(EnumType.STRING)
     private ItemSellStatusEnum itemSellStatus;
 
+    public void updateItem(ItemFormDto itemFormDto){
+        this.itemName = itemFormDto.getItemName();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 }
