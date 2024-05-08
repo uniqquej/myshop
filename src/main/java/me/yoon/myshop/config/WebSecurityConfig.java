@@ -1,6 +1,5 @@
 package me.yoon.myshop.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,21 +24,28 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http
-                .authorizeRequests()
-                .requestMatchers("/login", "/signup","/user").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .and()
-                .csrf().disable()
-                .build();
+        http
+            .authorizeHttpRequests()
+            .requestMatchers("/","/login", "/signup","/user").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .anyRequest().authenticated();
+
+        http
+            .formLogin()
+            .loginPage("/login")
+            .defaultSuccessUrl("/")
+            .and()
+            .logout()
+            .logoutSuccessUrl("/login")
+            .invalidateHttpSession(true);
+        http
+            .exceptionHandling()
+            .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+        http
+            .csrf().disable();
+
+        return http.build();
     }
 
     @Bean // 인증 관리자 관련 설정
