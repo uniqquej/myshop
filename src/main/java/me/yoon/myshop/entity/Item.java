@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Item {
+public class Item extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
@@ -33,8 +33,5 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatusEnum itemSellStatus;
-
-    private LocalDateTime registerTime;
-    private LocalDateTime updateTime;
 
 }

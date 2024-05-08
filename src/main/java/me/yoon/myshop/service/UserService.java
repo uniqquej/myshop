@@ -19,7 +19,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public Long save(SignupRequestDto requestDto){
-        UserRoleEnum role = UserRoleEnum.USER;
+        UserRoleEnum role = UserRoleEnum.ADMIN;
 
         return userRepository.save(User.builder()
                 .email(requestDto.getEmail())

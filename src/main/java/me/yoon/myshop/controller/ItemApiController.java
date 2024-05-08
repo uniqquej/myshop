@@ -32,4 +32,5 @@ public class ItemApiController {
         ItemResponseDto item = new ItemResponseDto(itemService.findById(id));
         return ResponseEntity.ok().body(item);
     }
+
 }
