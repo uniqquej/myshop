@@ -2,10 +2,7 @@ package me.yoon.myshop.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import me.yoon.myshop.dto.ItemFormDto;
-import me.yoon.myshop.dto.ItemImgDto;
-import me.yoon.myshop.dto.ItemResponseDto;
-import me.yoon.myshop.dto.ItemSearchDto;
+import me.yoon.myshop.dto.*;
 import me.yoon.myshop.entity.Item;
 import me.yoon.myshop.entity.ItemImg;
 import me.yoon.myshop.repository.ItemImgRepository;
@@ -84,6 +81,11 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
         return itemRepository.getAdminItemPage(itemSearchDto,pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+        return itemRepository.getMainItemPage(itemSearchDto,pageable);
     }
 
 }

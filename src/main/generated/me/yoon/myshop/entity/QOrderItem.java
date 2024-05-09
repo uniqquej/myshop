@@ -22,15 +22,15 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public static final QOrderItem orderItem = new QOrderItem("orderItem");
 
-    public final me.yoon.myshop.entity.QTimestamped _super = new me.yoon.myshop.entity.QTimestamped(this);
+    public final QTimestamped _super = new QTimestamped(this);
 
     public final NumberPath<Integer> count = createNumber("count", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final me.yoon.myshop.entity.QItem item;
+    public final QItem item;
 
-    public final me.yoon.myshop.entity.QOrder order;
+    public final QOrder order;
 
     public final NumberPath<Integer> orderPrice = createNumber("orderPrice", Integer.class);
 
@@ -58,8 +58,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public QOrderItem(Class<? extends OrderItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.item = inits.isInitialized("item") ? new me.yoon.myshop.entity.QItem(forProperty("item")) : null;
-        this.order = inits.isInitialized("order") ? new me.yoon.myshop.entity.QOrder(forProperty("order"), inits.get("order")) : null;
+        this.item = inits.isInitialized("item") ? new QItem(forProperty("item")) : null;
+        this.order = inits.isInitialized("order") ? new QOrder(forProperty("order"), inits.get("order")) : null;
     }
 
 }

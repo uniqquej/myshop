@@ -22,7 +22,7 @@ public class QItemImg extends EntityPathBase<ItemImg> {
 
     public static final QItemImg itemImg = new QItemImg("itemImg");
 
-    public final me.yoon.myshop.entity.QTimestamped _super = new me.yoon.myshop.entity.QTimestamped(this);
+    public final QTimestamped _super = new QTimestamped(this);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -30,7 +30,7 @@ public class QItemImg extends EntityPathBase<ItemImg> {
 
     public final StringPath imgUrl = createString("imgUrl");
 
-    public final me.yoon.myshop.entity.QItem item;
+    public final QItem item;
 
     public final StringPath oriImgName = createString("oriImgName");
 
@@ -60,7 +60,7 @@ public class QItemImg extends EntityPathBase<ItemImg> {
 
     public QItemImg(Class<? extends ItemImg> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.item = inits.isInitialized("item") ? new me.yoon.myshop.entity.QItem(forProperty("item")) : null;
+        this.item = inits.isInitialized("item") ? new QItem(forProperty("item")) : null;
     }
 
 }

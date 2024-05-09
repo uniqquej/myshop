@@ -24,7 +24,7 @@ public class QCart extends EntityPathBase<Cart> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final me.yoon.myshop.entity.QUser user;
+    public final QUser user;
 
     public QCart(String variable) {
         this(Cart.class, forVariable(variable), INITS);
@@ -44,7 +44,7 @@ public class QCart extends EntityPathBase<Cart> {
 
     public QCart(Class<? extends Cart> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new me.yoon.myshop.entity.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

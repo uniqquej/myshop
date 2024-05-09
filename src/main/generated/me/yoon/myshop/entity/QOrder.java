@@ -22,13 +22,13 @@ public class QOrder extends EntityPathBase<Order> {
 
     public static final QOrder order = new QOrder("order1");
 
-    public final me.yoon.myshop.entity.QTimestamped _super = new me.yoon.myshop.entity.QTimestamped(this);
+    public final QTimestamped _super = new QTimestamped(this);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final DateTimePath<java.time.LocalDateTime> orderDate = createDateTime("orderDate", java.time.LocalDateTime.class);
 
-    public final ListPath<OrderItem, me.yoon.myshop.entity.QOrderItem> orderItems = this.<OrderItem, me.yoon.myshop.entity.QOrderItem>createList("orderItems", OrderItem.class, me.yoon.myshop.entity.QOrderItem.class, PathInits.DIRECT2);
+    public final ListPath<OrderItem, QOrderItem> orderItems = this.<OrderItem, QOrderItem>createList("orderItems", OrderItem.class, QOrderItem.class, PathInits.DIRECT2);
 
     public final EnumPath<OrderStatusEnum> orderStatus = createEnum("orderStatus", OrderStatusEnum.class);
 
@@ -38,7 +38,7 @@ public class QOrder extends EntityPathBase<Order> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
 
-    public final me.yoon.myshop.entity.QUser user;
+    public final QUser user;
 
     public QOrder(String variable) {
         this(Order.class, forVariable(variable), INITS);
@@ -58,7 +58,7 @@ public class QOrder extends EntityPathBase<Order> {
 
     public QOrder(Class<? extends Order> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new me.yoon.myshop.entity.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

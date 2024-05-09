@@ -19,7 +19,7 @@ public class QItem extends EntityPathBase<Item> {
 
     public static final QItem item = new QItem("item");
 
-    public final me.yoon.myshop.entity.QTimestamped _super = new me.yoon.myshop.entity.QTimestamped(this);
+    public final QTimestamped _super = new QTimestamped(this);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
