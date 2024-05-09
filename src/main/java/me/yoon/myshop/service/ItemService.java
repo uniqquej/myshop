@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import me.yoon.myshop.dto.ItemFormDto;
 import me.yoon.myshop.dto.ItemImgDto;
 import me.yoon.myshop.dto.ItemResponseDto;
+import me.yoon.myshop.dto.ItemSearchDto;
 import me.yoon.myshop.entity.Item;
 import me.yoon.myshop.entity.ItemImg;
 import me.yoon.myshop.repository.ItemImgRepository;
 import me.yoon.myshop.repository.ItemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,6 +79,11 @@ public class ItemService {
             itemImgService.updateItemImg(itemImgIds.get(i),itemImgFileList.get(i));
         }
         return item.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+        return itemRepository.getAdminItemPage(itemSearchDto,pageable);
     }
 
 }
