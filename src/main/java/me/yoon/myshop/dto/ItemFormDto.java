@@ -1,18 +1,12 @@
 package me.yoon.myshop.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import me.yoon.myshop.entity.Item;
-import me.yoon.myshop.entity.ItemImg;
 import me.yoon.myshop.entity.ItemSellStatusEnum;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.availability.AvailabilityState;
 
 import java.util.ArrayList;
 import java.util.List;

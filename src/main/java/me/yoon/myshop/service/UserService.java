@@ -1,34 +1,36 @@
 package me.yoon.myshop.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import me.yoon.myshop.dto.SignupRequestDto;
 import me.yoon.myshop.entity.User;
-import me.yoon.myshop.entity.UserRoleEnum;
 import me.yoon.myshop.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+@Transactional
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
-
-    public Long save(SignupRequestDto requestDto){
-        UserRoleEnum role = UserRoleEnum.ADMIN;
-
-        return userRepository.save(User.builder()
-                .email(requestDto.getEmail())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .role(role)
-                .build()).getId();
+    public User saveUser(User user){
+        User checkUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                ()->new IllegalArgumentException("이미 가입된 회원입니다.")
+        );
+        return userRepository.save(user);
     }
-    public User findById(Long id){
-        return userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Unexpected user"));
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().toString())
+                .build();
     }
 }
 
