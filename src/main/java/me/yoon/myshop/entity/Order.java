@@ -3,6 +3,7 @@ package me.yoon.myshop.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Entity
 @Setter @Getter
+@ToString
+@Table(name = "orders")
 public class Order extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
