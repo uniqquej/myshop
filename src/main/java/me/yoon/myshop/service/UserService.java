@@ -17,15 +17,14 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public User saveUser(User user){
-        User checkUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
-                ()->new IllegalArgumentException("이미 가입된 회원입니다.")
-        );
+        User checkUser = userRepository.findByEmail(user.getEmail());
+        if(checkUser != null) throw new IllegalStateException("중복된 회원입니다.");
         return userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByEmail(email);
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())

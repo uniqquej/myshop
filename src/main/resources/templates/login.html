@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/default}">
+      layout:decorate="~{layouts/navbar}">
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -25,20 +25,23 @@
 </th:block>
 
 <div layout:fragment="content">
-    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
-    <div>
-        <label th:for="email">email</label>
-        <input type="email" name="email" placeholder="이메일을 입력해주세요">
-    </div>
-    <div>
-        <label th:for="password">password</label>
-        <input type="password" name="password" placeholder="비밀번호를 입력해주세요">
-    </div>
-    <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
+    <h1>로그인 페이지</h1>
+    <form action="/user/login" role="form" method="post">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+        <div>
+            <label th:for="email">email</label>
+            <input type="email" name="email" placeholder="이메일을 입력해주세요">
+        </div>
+        <div>
+            <label th:for="password">password</label>
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요">
+        </div>
+        <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 
-    <div>
-        <button type="submit">로그인</button>
-    </div>
+        <div>
+            <button>로그인</button>
+        </div>
+    </form>
 </div>
 
 </html>

@@ -1,16 +1,14 @@
 package me.yoon.myshop.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import me.yoon.myshop.dto.UserFormDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @NoArgsConstructor
 @Getter @Setter
 @Entity
+@ToString
 public class User{
 
     @Id
