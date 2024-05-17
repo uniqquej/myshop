@@ -20,23 +20,29 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/user/**","/item/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/user/login")
-                .usernameParameter("email")
-                .defaultSuccessUrl("/")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/user/login")
-                .and()
-                .csrf().disable()
-                .build();
+       http
+            .formLogin()
+            .loginPage("/user/login")
+            .usernameParameter("email")
+            .defaultSuccessUrl("/")
+            .and()
+            .logout()
+            .logoutSuccessUrl("/user/login")
+            .and()
+            .csrf().disable();
+
+       http
+           .authorizeHttpRequests()
+           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+           .requestMatchers("/","/user/**","/item/**","/cart/**").permitAll()
+           .requestMatchers("/admin/**").hasRole("ADMIN")
+           .anyRequest().authenticated();
+
+       http
+           .exceptionHandling()
+           .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+    return http.build();
     }
 
     @Bean

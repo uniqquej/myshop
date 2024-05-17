@@ -77,6 +77,12 @@
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
+            if(token && header) {
+                $(document).ajaxSend(function(event, xhr, options) {
+                    xhr.setRequestHeader(header, token);
+                });
+            }
+
             var url = "/cart";
             var paramData = {
                 itemId : $("#itemId").val(),
@@ -90,9 +96,6 @@
                 type     : "POST",
                 contentType : "application/json",
                 data     : param,
-                beforeSend : function(xhr){
-                    xhr.setRequestHeader(header, token);
-                },
                 dataType : "json",
                 cache   : false,
                 success  : function(result, status){
@@ -103,11 +106,10 @@
 
                     if(jqXHR.status == '401'){
                         alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
+                        location.href='/user/login';
                     } else{
                         alert(jqXHR.responseText);
                     }
-
                 }
             });
         }

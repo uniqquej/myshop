@@ -1,14 +1,12 @@
 package me.yoon.myshop.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @ToString
+@NoArgsConstructor
 public class Cart {
 
     @Id
@@ -19,5 +17,17 @@ public class Cart {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    @Builder
+    public Cart(User user){
+        this.user = user;
+    }
+
+    public static Cart createCart(User user){
+        Cart cart = Cart.builder()
+                .user(user)
+                .build();
+        return cart;
+    }
 
 }
