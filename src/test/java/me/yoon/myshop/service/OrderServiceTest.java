@@ -1,12 +1,7 @@
 package me.yoon.myshop.service;
 
-import me.yoon.myshop.entity.ItemSellStatusEnum;
-import me.yoon.myshop.entity.OrderStatusEnum;
+import me.yoon.myshop.entity.*;
 import me.yoon.myshop.dto.OrderDto;
-import me.yoon.myshop.entity.Item;
-import me.yoon.myshop.entity.User;
-import me.yoon.myshop.entity.Order;
-import me.yoon.myshop.entity.OrderItem;
 import me.yoon.myshop.repository.ItemRepository;
 import me.yoon.myshop.repository.UserRepository;
 import me.yoon.myshop.repository.OrderRepository;
@@ -25,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations="classpath:application-test.properties")
+//@TestPropertySource(locations="classpath:application-test.properties")
 class OrderServiceTest {
 
     @Autowired
@@ -53,6 +48,8 @@ class OrderServiceTest {
     public User saveUser(){
         User user = new User();
         user.setEmail("test@test.com");
+        user.setPassword("1234");
+        user.setRole(UserRoleEnum.USER);
         return userRepository.save(user);
 
     }
@@ -76,6 +73,25 @@ class OrderServiceTest {
         int totalPrice = orderDto.getCount()*item.getPrice();
 
         assertEquals(totalPrice, order.getTotalPrice());
+    }
+
+    @Test
+    @DisplayName("주문 취소 테스트")
+    public void cancelOrder(){
+        Item item = saveItem();
+        User user = saveUser();
+
+        OrderDto orderDto = new OrderDto();
+        orderDto.setCount(10);
+        orderDto.setItemId(item.getId());
+        Long orderId = orderService.order(orderDto, user.getEmail());
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        orderService.cancelOrder(orderId);
+
+        assertEquals(OrderStatusEnum.CANCEL, order.getOrderStatus());
+        assertEquals(100, item.getStockNumber());
     }
 
 

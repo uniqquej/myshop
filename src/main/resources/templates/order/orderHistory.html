@@ -7,6 +7,49 @@
     <meta name="_csrf" th:content="${_csrf?.token}"/>
     <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
 </head>
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        function cancelOrder(orderId) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if(token && header) {
+                $(document).ajaxSend(function(event, xhr, options) {
+                    xhr.setRequestHeader(header, token);
+                });
+            }
+
+            var url = "/order/" + orderId + "/cancel";
+            var paramData = {
+                orderId : orderId,
+            };
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                contentType : "application/json",
+                data     : param,
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    alert("주문이 취소 되었습니다.");
+                    location.href='/orders/' + [[${page}]];
+                },
+                error : function(jqXHR, status, error){
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/user/login';
+                    } else{
+                        alert(jqXHR.responseText);
+                    }
+                }
+            });
+        }
+    </script>
+
+</th:block>
 
 
 <!-- 사용자 CSS 추가 -->
@@ -41,6 +84,7 @@
         }
     </style>
 </th:block>
+
 
 <div layout:fragment="content" class="content-mg">
 

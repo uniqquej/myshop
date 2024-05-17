@@ -34,5 +34,9 @@ public class OrderItem extends Timestamped{
     public int getTotalPrice(){
         return orderPrice*count;
     }
+
+    public void cancel(){
+        this.getItem().addStock(count);
+    }
 }
 

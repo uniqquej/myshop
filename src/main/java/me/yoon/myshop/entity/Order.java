@@ -53,4 +53,11 @@ public class Order extends Timestamped{
         return totalPrice;
     }
 
+    public void cancelOrder(){
+        this.orderStatus = OrderStatusEnum.CANCEL;
+        for(OrderItem orderItem: orderItems){
+            orderItem.cancel();
+        }
+    }
+
 }
