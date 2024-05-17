@@ -33,7 +33,7 @@ public class CartItem extends Timestamped{
     }
 
     public void addCount(int count){
-        this.count = count;
+        this.count += count;
     }
 
     public void updateCount(int count) {
