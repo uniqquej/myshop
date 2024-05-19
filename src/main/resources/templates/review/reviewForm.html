@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/navbar}">
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            var errorMessage = [[${errorMessage}]];
+            if(errorMessage != null){
+                alert(errorMessage);
+            }
+        });
+
+    </script>
+
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .input-group {
+            margin-bottom : 15px
+        }
+        .img-div {
+            margin-bottom : 10px
+        }
+        .fieldError {
+            color: #bd2130;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+    <form method="post" role="form" enctype="multipart/form-data" th:object="${reviewFormDto}">
+        <p class="h2">
+            리뷰 작성
+        </p>
+        <input type="hidden" th:field="*{id}">
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">상품명</span>
+                <input type="text" th:value="${itemName}" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <select class="custom-select" th:field="*{star}">
+                <option value=1>⭐</option>
+                <option value=2>⭐⭐</option>
+                <option value=3>⭐⭐⭐</option>
+                <option value=4>⭐⭐⭐⭐</option>
+                <option value=5>⭐⭐⭐⭐⭐</option>
+            </select>
+        </div>
+        <p class="fieldError" th:if="${#fields.hasErrors('star')}" th:errors="*{star}">Incorrect data</p>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">상품평</span>
+            </div>
+            <textarea class="form-control" th:field="*{content}" aria-label="With textarea" ></textarea>
+        </div>
+        <p class="fieldError" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect data</p>
+
+        <div th:if="${#strings.isEmpty(reviewFormDto.id)}" style="text-align: center">
+            <button th:formaction="@{/review(id=${param.id})}" type="submit" class="btn btn-primary">저장</button>
+        </div>
+
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+    </form>
+</div>
+
+</html>

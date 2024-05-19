@@ -47,6 +47,14 @@
                 }
             });
         }
+
+        function reviewPage(orderItemId){
+            var url = '/review?order=' + orderItemId;
+
+            location.href = url;
+
+        }
+
     </script>
 
 </th:block>
@@ -110,12 +118,17 @@
                 <div class="repImgDiv">
                     <img th:src="${orderItem.imgUrl}" class = "rounded repImg" th:alt="${orderItem.itemName}">
                 </div>
-                <div class="align-self-center w-75">
+                <div class="align-self-center w-50">
                     <span th:text="${orderItem.itemName}" class="fs24 font-weight-bold"></span>
                     <div class="fs18 font-weight-light">
                         <span th:text="${orderItem.orderPrice} +'원'"></span>
                         <span th:text="${orderItem.count} +'개'"></span>
                     </div>
+                </div>
+                <div>
+                    <button th:if="${order.orderStatus == T(me.yoon.myshop.entity.OrderStatusEnum).ORDER}" type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{/review(id=${orderItem.id})}'|">
+                        리뷰 작성
+                    </button>
                 </div>
             </div>
         </div>

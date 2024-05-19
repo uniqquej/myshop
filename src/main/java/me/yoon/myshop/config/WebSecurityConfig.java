@@ -34,7 +34,7 @@ public class WebSecurityConfig {
        http
            .authorizeHttpRequests()
            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-           .requestMatchers("/","/user/**","/item/**","/cart/**").permitAll()
+           .requestMatchers("/","/user/**","/item/**","/cart/**","/review/**").permitAll()
            .requestMatchers("/admin/**").hasRole("ADMIN")
            .anyRequest().authenticated();
 
