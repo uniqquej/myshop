@@ -15,6 +15,15 @@
             margin-top:2%;
             margin-bottom:100px;
         }
+        .card{
+            width:750px;
+            height:100%;
+            padding:30px;
+            margin-bottom:20px;
+        }
+        #review-writer{
+            float: right;
+        }
     </style>
 
 </th:block>
@@ -24,13 +33,18 @@
         리뷰 목록
     </h2>
     <div class="row"  th:each="review: ${reviews}">
-            <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-sm">평점</span>
-                <input th:value="${'⭐'.repeat(review.star)}" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        <div class="card">
+            <div class="card-header">
+                <span th:text="${'⭐'.repeat(review.star)}"></span>
+                <span id="review-writer">작성자 : [[${review.writer}]]</span>
             </div>
-            <div class="input-group input-group-sm mb-3">
-                <textarea class="form-control"  aria-label="With textarea" th:text="${review.content}"></textarea>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>[[${review.content}]]</p>
+                    <footer class="blockquote-footer">[[${review.registerTime}]]</footer>
+                </blockquote>
             </div>
+        </div>
     </div>
 
 </div>
