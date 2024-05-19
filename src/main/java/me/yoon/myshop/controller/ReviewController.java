@@ -3,16 +3,28 @@ package me.yoon.myshop.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.yoon.myshop.dto.ItemSearchDto;
+import me.yoon.myshop.dto.MainItemDto;
 import me.yoon.myshop.dto.ReviewFormDto;
+import me.yoon.myshop.dto.ReviewResponseDto;
+import me.yoon.myshop.entity.Review;
 import me.yoon.myshop.service.ReviewService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,7 +59,18 @@ public class ReviewController {
             return "review/reviewForm";
         }
         return "redirect:/orders";
+    }
 
+    @GetMapping("/reviews/{itemId}")
+    public String reviews(@PathVariable("itemId") Long itemId, Model model){
+        List<ReviewResponseDto> reviewResponseDtos =
+                reviewService.findAllByItemId(itemId)
+                        .stream()
+                        .map(ReviewResponseDto::new)
+                        .toList();
+        model.addAttribute("reviews",reviewResponseDtos);
+
+        return "review/reviewList";
     }
 
 }

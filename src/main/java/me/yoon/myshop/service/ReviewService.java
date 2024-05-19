@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.yoon.myshop.dto.ReviewFormDto;
+import me.yoon.myshop.dto.ReviewResponseDto;
 import me.yoon.myshop.entity.Item;
 import me.yoon.myshop.entity.OrderItem;
 import me.yoon.myshop.entity.Review;
@@ -14,6 +15,8 @@ import me.yoon.myshop.repository.OrderItemRepository;
 import me.yoon.myshop.repository.ReviewRepository;
 import me.yoon.myshop.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +45,9 @@ public class ReviewService {
         log.info("review : "+review);
         Review savedReview = reviewRepository.save(review);
         return savedReview.getId();
+    }
+
+    public List<Review> findAllByItemId(Long itemId){
+        return reviewRepository.getReviewList(itemId);
     }
 }
