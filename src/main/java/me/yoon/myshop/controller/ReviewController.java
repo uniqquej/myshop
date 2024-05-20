@@ -7,6 +7,9 @@ import me.yoon.myshop.dto.ReviewFormDto;
 import me.yoon.myshop.dto.ReviewResponseDto;
 import me.yoon.myshop.entity.Review;
 import me.yoon.myshop.service.ReviewService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -94,13 +97,23 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{itemId}")
-    public String reviews(@PathVariable("itemId") Long itemId, Model model){
-        List<ReviewResponseDto> reviewResponseDtos =
-                reviewService.findAllByItemId(itemId)
-                        .stream()
-                        .map(ReviewResponseDto::new)
-                        .toList();
+    public String reviews(
+            @PageableDefault(page=1) Pageable pageable,
+            @PathVariable("itemId") Long itemId,
+            Model model
+    ){
+        Page<ReviewResponseDto> reviewResponseDtos =
+                reviewService.findAllByItemId(itemId,pageable)
+                        .map(ReviewResponseDto::new);
+
+        int blockLimit = 5;
+        int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min((startPage + blockLimit - 1), reviewResponseDtos.getTotalPages());
+
         model.addAttribute("reviews",reviewResponseDtos);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("itemId",itemId);
 
         return "review/reviewList";
     }

@@ -77,13 +77,39 @@
                     <p>[[${review.content}]]</p>
                     <footer class="blockquote-footer">[[${review.registerTime}]]</footer>
                     <div>
-                        <button type="button" th:if="${#authentication.name==review.writer}" th:onclick="|location.href='@{|/review/${review.id}|}'|">수정</button>
-                        <button th:if="${#authentication.name==review.writer}" th:value="${review.id}" onclick="deleteReview(this.value)">삭제</button>
+                        <button class="btn btn-outline-secondary" type="button" th:if="${#authentication.name==review.writer}" th:onclick="|location.href='@{|/review/${review.id}|}'|">수정</button>
+                        <button class="btn btn-outline-secondary" th:if="${#authentication.name==review.writer}" th:value="${review.id}" onclick="deleteReview(this.value)">삭제</button>
                     </div>
                 </blockquote>
             </div>
         </div>
     </div>
+    <div>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:href="@{/reviews/{itemId}(itemId=${itemId},page=1)}">첫 페이지 </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="${reviews.first} ? '#' : @{/reviews/{itemId}(itemId=${itemId},page=${reviews.number})}"> 이전 </a>
+            </li>
 
+            <span class="page-item" th:each="page: ${#numbers.sequence(startPage, endPage)}">
+
+                <li class="page-item active" th:if="${page == reviews.number + 1}">
+                    <a class="page-link" th:text="${page}"></a>
+                </li>
+                <li class="page-item" th:unless="${page == reviews.number + 1}">
+                    <a class="page-link" th:href="@{/reviews/{itemId}(itemId=${itemId}, page=${page})}" th:text="${page}"></a>
+                </li>
+            </span>
+            <li class="page-item">
+                <a class="page-link" th:href="${reviews.last} ? '#' : @{/reviews/{itemId}(itemId=${itemId},page=${reviews.number + 2})}"> 다음 </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/reviews/{itemId}(itemId=${itemId},page=${reviews.totalPages})}"> 마지막 페이지</a>
+            </li>
+
+        </ul>
+    </div>
 </div>
 </html>

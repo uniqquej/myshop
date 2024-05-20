@@ -16,6 +16,9 @@ import me.yoon.myshop.repository.ItemRepository;
 import me.yoon.myshop.repository.OrderItemRepository;
 import me.yoon.myshop.repository.ReviewRepository;
 import me.yoon.myshop.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
@@ -65,8 +68,11 @@ public class ReviewService {
         return StringUtils.equals(review.getUser().getEmail(), currentUser.getEmail());
     }
 
-    public List<Review> findAllByItemId(Long itemId){
-        return reviewRepository.getReviewList(itemId);
+    public Page<Review> findAllByItemId(Long itemId,Pageable pageable){
+        int page = pageable.getPageNumber()-1;
+        int pageSize = 5;
+        Page<Review> reviewList = reviewRepository.getReviewList(itemId,PageRequest.of(page, pageSize));
+        return reviewList;
     }
 
     public void deleteReview(Long reviewId) {
