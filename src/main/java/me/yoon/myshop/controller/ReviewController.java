@@ -3,28 +3,19 @@ package me.yoon.myshop.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.yoon.myshop.dto.ItemSearchDto;
-import me.yoon.myshop.dto.MainItemDto;
 import me.yoon.myshop.dto.ReviewFormDto;
 import me.yoon.myshop.dto.ReviewResponseDto;
 import me.yoon.myshop.entity.Review;
 import me.yoon.myshop.service.ReviewService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -59,6 +50,47 @@ public class ReviewController {
             return "review/reviewForm";
         }
         return "redirect:/orders";
+    }
+
+    @PostMapping("/review/{reviewId}")
+    public String updateReview(
+            @Valid ReviewFormDto reviewFormDto,
+            BindingResult bindingResult,
+            Model model,
+            Principal principal
+    ) {
+        if (bindingResult.hasErrors()) return "review/reviewForm";
+        if (!reviewService.validateReview(reviewFormDto.getId(), principal.getName())) {
+            model.addAttribute("errorMessage", "리뷰 수정 권한이 없습니다.");
+            return "redirect:/";
+        }
+            try {
+                reviewService.updateReview(reviewFormDto);
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", "리뷰 수정 중 오류가 발생했습니다.");
+                return "review/reviewForm";
+            }
+            return "redirect:/";
+        }
+
+    @GetMapping("/review/{reviewId}")
+    public String reviewUpdatePage(@PathVariable("reviewId") Long reviewId, Model model){
+        Review review = reviewService.findById(reviewId);
+        ReviewFormDto reviewFormDto = new ReviewFormDto(review);
+        model.addAttribute("reviewFormDto", reviewFormDto);
+        return "review/reviewForm";
+    }
+
+    @DeleteMapping("/review/{reviewId}")
+    public @ResponseBody ResponseEntity deleteReview(
+            @PathVariable("reviewId") Long reviewId,
+            Principal principal
+    ){
+        if(!reviewService.validateReview(reviewId, principal.getName())){
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        reviewService.deleteReview(reviewId);
+        return new ResponseEntity<Long>(reviewId, HttpStatus.OK);
     }
 
     @GetMapping("/reviews/{itemId}")

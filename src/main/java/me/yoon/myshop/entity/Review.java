@@ -40,4 +40,9 @@ public class Review extends Timestamped{
                 .build();
     }
 
+    public void updateReview(ReviewFormDto reviewFormDto){
+        this.content = reviewFormDto.getContent();
+        this.star = reviewFormDto.getStar();
+    }
+
 }

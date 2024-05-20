@@ -3,9 +3,43 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/navbar}">
 
-<!--<th:block layout:fragment="script">-->
+<th:block layout:fragment="script">
+    <script>
+        function deleteReview(reviewId){
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
 
-<!--</th:block>-->
+            if(token && header) {
+                $(document).ajaxSend(function(event, xhr, options) {
+                    xhr.setRequestHeader(header, token);
+                });
+            }
+
+             var url = "/review/" + reviewId;
+
+            $.ajax({
+                url      : url,
+                type     : "DELETE",
+                 dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    document.location.reload();
+                },
+                error : function(jqXHR, status, error){
+
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/user/login';
+                    } else{
+                        alert(jqXHR.responseJSON.message);
+                    }
+                }
+            });
+
+        }
+    </script>
+
+</th:block>
 
 <th:block layout:fragment="css">
     <style>
@@ -29,7 +63,7 @@
 </th:block>
 
 <div layout:fragment="content" class="content-mg">
-    <h2 class="mb-4">
+    <h2 class="mb-4" style="text-align: center">
         리뷰 목록
     </h2>
     <div class="row"  th:each="review: ${reviews}">
@@ -42,6 +76,10 @@
                 <blockquote class="blockquote mb-0">
                     <p>[[${review.content}]]</p>
                     <footer class="blockquote-footer">[[${review.registerTime}]]</footer>
+                    <div>
+                        <button type="button" th:if="${#authentication.name==review.writer}" th:onclick="|location.href='@{|/review/${review.id}|}'|">수정</button>
+                        <button th:if="${#authentication.name==review.writer}" th:value="${review.id}" onclick="deleteReview(this.value)">삭제</button>
+                    </div>
                 </blockquote>
             </div>
         </div>

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.yoon.myshop.entity.Review;
@@ -11,6 +12,7 @@ import me.yoon.myshop.entity.User;
 
 @Getter @Setter
 @ToString
+@NoArgsConstructor
 public class ReviewFormDto {
     private Long id;
 
@@ -19,4 +21,10 @@ public class ReviewFormDto {
     private int star;
 
     private String content;
+
+    public ReviewFormDto(Review review){
+        this.id = review.getId();
+        this.star = review.getStar();
+        this.content = review.getContent();
+    }
 }
