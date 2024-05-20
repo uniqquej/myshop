@@ -25,6 +25,7 @@ public class WebSecurityConfig {
             .loginPage("/user/login")
             .usernameParameter("email")
             .defaultSuccessUrl("/")
+            .failureUrl("/user/login/error")
             .and()
             .logout()
             .logoutSuccessUrl("/user/login")
