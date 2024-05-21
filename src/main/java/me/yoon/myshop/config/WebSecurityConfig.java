@@ -1,54 +1,70 @@
 package me.yoon.myshop.config;
 
+import lombok.RequiredArgsConstructor;
+import me.yoon.myshop.entity.UserRoleEnum;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JwtUtil jwtUtil;
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
     @Bean
     public WebSecurityCustomizer configure(){
         return (web) -> web.ignoring()
-                .requestMatchers("/static/**");
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http
-            .formLogin()
-            .loginPage("/user/login")
-            .usernameParameter("email")
-            .defaultSuccessUrl("/")
-            .failureUrl("/user/login/error")
-            .and()
-            .logout()
-            .logoutSuccessUrl("/user/login")
-            .and()
-            .csrf().disable();
+       http.csrf().disable();
+
+       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
        http
            .authorizeHttpRequests()
-           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-           .requestMatchers("/","/user/**","/item/**","/cart/**","/review/**").permitAll()
-           .requestMatchers("/admin/**").hasRole("ADMIN")
-           .anyRequest().authenticated();
+           .requestMatchers("/").permitAll()
+           .requestMatchers("/user/**","/user/api/login").permitAll()
+           .requestMatchers("/item/**").permitAll()
+           .requestMatchers("/cart/**").permitAll()
+           .requestMatchers("/review/**").permitAll()
+           .requestMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.toString())
+           .anyRequest().authenticated()
+           .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+       http
+            .formLogin()
+            .loginPage("/user/login")
+//            .defaultSuccessUrl("/")
+//            .failureUrl("/user/login/error")
+//            .and()
+//            .logout()
+//            .logoutSuccessUrl("/user/login")
+       ;
+
 
        http
            .exceptionHandling()
-           .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+           .accessDeniedPage("/forbidden");
 
     return http.build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

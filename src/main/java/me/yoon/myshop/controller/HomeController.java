@@ -1,6 +1,7 @@
 package me.yoon.myshop.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.yoon.myshop.dto.ItemSearchDto;
 import me.yoon.myshop.dto.MainItemDto;
 import me.yoon.myshop.service.ItemService;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j(topic = "home controller")
 public class HomeController {
     private final ItemService itemService;
 
@@ -27,5 +29,12 @@ public class HomeController {
         model.addAttribute("itemSearchDto",itemSearchDto);
         model.addAttribute("maxPage",5);
         return "index";
+    }
+
+    @GetMapping("/forbidden")
+    public String forbidden() {
+        log.warn("비정상적인 접근: 403 forbidden");
+        /*따로 횟수를 기록한다던지 로직*/
+        return "redirect:/";
     }
 }

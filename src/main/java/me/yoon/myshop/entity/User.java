@@ -38,7 +38,7 @@ public class User{
         User user = User.builder()
                 .email(userFormDto.getEmail())
                 .password(passwordEncoder.encode(userFormDto.getPassword()))
-                .role(UserRoleEnum.ADMIN)
+                .role(UserRoleEnum.USER)
                 .build();
         return user;
 
