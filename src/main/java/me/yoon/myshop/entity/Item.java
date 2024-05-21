@@ -43,13 +43,21 @@ public class Item extends Timestamped{
     }
 
     public void addStock(int stockNumber){
+
         this.stockNumber += stockNumber;
+
+        if(this.itemSellStatus==ItemSellStatusEnum.SOLD_OUT && this.stockNumber>0){
+            this.itemSellStatus = ItemSellStatusEnum.SELL;
+        }
     }
 
     public void removeStock(int stockNumber){
         int restStock = this.stockNumber-stockNumber;
         if(restStock<0){
             throw new OutOfStockException("상품재고가 부족합니다. (현재 재고량 : "+this.stockNumber+" )");
+        }
+        else if(restStock==0){
+            this.itemSellStatus = ItemSellStatusEnum.SOLD_OUT;
         }
         this.stockNumber = restStock;
     }
