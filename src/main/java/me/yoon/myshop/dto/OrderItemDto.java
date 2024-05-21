@@ -12,6 +12,7 @@ public class OrderItemDto {
     private int count;
     private int orderPrice;
     private String imgUrl;
+    private boolean hasReview;
 
     public OrderItemDto(OrderItem orderItem, String imgUrl){
         this.id = orderItem.getId();
@@ -19,5 +20,6 @@ public class OrderItemDto {
         this.count = orderItem.getCount();
         this.orderPrice = orderItem.getOrderPrice();
         this.imgUrl = imgUrl;
+        this.hasReview = orderItem.isHasReview();
     }
 }

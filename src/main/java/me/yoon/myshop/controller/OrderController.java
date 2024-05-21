@@ -45,7 +45,6 @@ public class OrderController {
 
         String email = principal.getName();
         Long orderId;
-        log.info("order controller email : "+email);
         try{
             orderId = orderService.order(orderDto,email);
         }catch (Exception e){

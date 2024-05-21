@@ -51,6 +51,7 @@ public class ReviewService {
         Review  review = Review.createReview(user, item, reviewFormDto);
         log.info("review : "+review);
         Review savedReview = reviewRepository.save(review);
+        orderItem.writeReview();
         return savedReview.getId();
     }
 

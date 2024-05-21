@@ -26,6 +26,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Integer> count = createNumber("count", Integer.class);
 
+    public final BooleanPath hasReview = createBoolean("hasReview");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QItem item;

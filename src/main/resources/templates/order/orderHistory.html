@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div>
-                    <button th:if="${order.orderStatus == T(me.yoon.myshop.entity.OrderStatusEnum).ORDER}" type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{/review(id=${orderItem.id})}'|">
+                    <button th:if="${order.orderStatus == T(me.yoon.myshop.entity.OrderStatusEnum).ORDER} and ${orderItem.hasReview}==false" type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{/review(id=${orderItem.id})}'|">
                         리뷰 작성
                     </button>
                 </div>

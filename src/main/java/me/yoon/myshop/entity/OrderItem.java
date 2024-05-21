@@ -21,6 +21,7 @@ public class OrderItem extends Timestamped{
 
     private int orderPrice;
     private int count;
+    private boolean hasReview = false;
 
     public static OrderItem createOrderItem(Item item, int count){
         OrderItem orderItem = new OrderItem();
@@ -33,6 +34,9 @@ public class OrderItem extends Timestamped{
     }
     public int getTotalPrice(){
         return orderPrice*count;
+    }
+    public void writeReview(){
+        this.hasReview = true;
     }
 
     public void cancel(){
