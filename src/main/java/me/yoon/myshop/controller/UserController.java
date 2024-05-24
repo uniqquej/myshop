@@ -31,15 +31,8 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/logout")
-    public String logout(
-            @CookieValue(value = "Authorization", defaultValue = "", required = false) Cookie jwtCookie,
-                         HttpServletResponse response
-    ){
-        jwtCookie.setValue("");
-        jwtCookie.setMaxAge(0);
-        jwtCookie.setPath("/");
-        response.addCookie(jwtCookie);
-
+    public String logout(HttpServletRequest request, HttpServletResponse response){
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
         return "redirect:/user/login";
     }
     @GetMapping("/signup")
@@ -63,11 +56,7 @@ public class UserController {
         return "redirect:/user/login";
     }
     @GetMapping("/login")
-    public String login(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails!=null){
-            log.info(userDetails.getUsername());
-            return "redirect:/";
-        }
+    public String login(){
         return "login";
     }
     @GetMapping(value = "/login/error")
@@ -75,12 +64,4 @@ public class UserController {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
         return "login";
     }
-
-    @PostMapping("/api/login")
-    public String login(LoginRequestDto requestDto, HttpServletResponse response){
-        log.info("로그인 : "+requestDto.toString());
-        userService.login(requestDto,response);
-        return "redirect:/";
-    }
-
 }

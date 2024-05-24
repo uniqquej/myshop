@@ -30,25 +30,6 @@ public class UserService {
         if(checkUser != null) throw new IllegalStateException("중복된 회원입니다.");
         return userRepository.save(user);
     }
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response){
-        log.info("login"+loginRequestDto.toString());
-        User user = userRepository.findByEmail(loginRequestDto.getEmail());
-        if(user==null) throw new EntityNotFoundException("해당 유저가 존재하지 않습니다.");
 
-        try{
-            String token = jwtUtil.createToken(user.getEmail(), user.getRole());
-            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
-
-            Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token );
-            cookie.setMaxAge(24 * 60 * 60);
-            cookie.setPath("/");
-            cookie.setDomain("localhost");
-            cookie.setSecure(false);
-
-            response.addCookie(cookie);
-        }catch(UnsupportedEncodingException e){
-            log.error(e.getMessage());
-        }
-    }
 }
 

@@ -8,18 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-
-    private final JwtUtil jwtUtil;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -36,8 +32,6 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        http.csrf().disable();
 
-       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
        http
            .authorizeHttpRequests()
            .requestMatchers("/").permitAll()
@@ -46,19 +40,16 @@ public class WebSecurityConfig {
            .requestMatchers("/cart/**").permitAll()
            .requestMatchers("/review/**").permitAll()
            .requestMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.toString())
-           .anyRequest().authenticated()
-           .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+           .anyRequest().authenticated();
 
        http
             .formLogin()
             .loginPage("/user/login")
-//            .defaultSuccessUrl("/")
-//            .failureUrl("/user/login/error")
-//            .and()
-//            .logout()
-//            .logoutSuccessUrl("/user/login")
-       ;
-
+            .defaultSuccessUrl("/")
+            .failureUrl("/user/login/error")
+            .and()
+            .logout()
+            .logoutSuccessUrl("/user/login");
 
        http
            .exceptionHandling()
